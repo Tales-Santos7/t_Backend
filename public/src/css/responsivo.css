@@ -1,0 +1,14 @@
+@media (max-width: 450px) {
+    .main-section .content {
+      left: 5%;
+    }
+  
+    .main-section h1 {
+      font-size: 2rem;
+    }
+  
+    .main-section p {
+      font-size: 1rem;
+    }
+  }
+  
