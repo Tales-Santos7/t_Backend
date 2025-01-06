@@ -42,7 +42,7 @@
         <a href="#saiba-mais" class="btn">SAIBA MAIS</a>
         <script>
           // Código para carregar conteúdo dinâmico
-          fetch('http://localhost:3000/content/mainSection')
+          fetch('https://portifolio-taty.onrender.com/content/mainSection')
             .then(response => {
               if (!response.ok) {
                 throw new Error(`Erro na requisição: ${response.status}`);
@@ -66,7 +66,7 @@
     <h2>✨Galeria</h2>
     <div id="galeria-container">
       <script>
-        fetch('http://localhost:3000/content/gallery')
+        fetch('https://portifolio-taty.onrender.com/content/gallery')
           .then((response) => response.json())
           .then((data) => {
             const container = document.getElementById('galeria-container');
@@ -89,7 +89,7 @@
     <p id="about-description">Descrição padrão.</p>
   </section>
   <script>
-    fetch('http://localhost:3000/content/about')
+    fetch('https://portifolio-taty.onrender.com/content/about')
       .then((response) => response.json())
       .then((data) => {
         document.querySelector('#about-title').innerText = data.title;
@@ -104,7 +104,7 @@
     <h2>Blog</h2>
     <div class="blog-posts">
       <script>
-        fetch('http://localhost:3000/blog')
+        fetch('https://portifolio-taty.onrender.com/blog')
           .then(response => response.json())
           .then(posts => {
             const blogContainer = document.querySelector('.blog-posts');
