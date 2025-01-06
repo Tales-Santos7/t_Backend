@@ -1,9 +1,8 @@
 const express = require('express');
 const cors = require('cors');
-const path = require('path');
+const path = require('path'); 
 const mongoose = require('mongoose');
 const multer = require('multer'); // Biblioteca para upload de arquivos
-
 const app = express();
 const port = 3000;
 
@@ -12,9 +11,12 @@ app.use(express.json());
 app.use(cors());
 
 // Conectando ao MongoDB
-mongoose.connect('mongodb://localhost:27017/blog', { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log('Conectado ao MongoDB'))
-  .catch(err => console.log('Erro ao conectar ao MongoDB:', err));
+mongoose.connect('mongodb+srv://taty:taty1234@cluster0.23kgy.mongodb.net/Portifolio-da-taty?retryWrites=true&w=majority&appName=Cluster0', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+  .then(() => console.log('Conectado ao MongoDB local'))
+  .catch(err => console.error('Erro ao conectar ao MongoDB:', err));
 
 // Configuração do multer para salvar imagens na pasta `uploads`
 const storage = multer.diskStorage({
