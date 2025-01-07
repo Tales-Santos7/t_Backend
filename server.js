@@ -30,6 +30,18 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
+// Esquema e modelo Content para gerenciar seções
+const contentSchema = new mongoose.Schema({
+  section: { type: String, required: true }, // Nome da seção, ex.: "theme", "gallery"
+  color: String, // Para armazenar a cor (no caso de "theme")
+  images: [String], // URLs de imagens (usado para "gallery")
+  title: String, // Título da seção (opcional)
+  description: String, // Descrição da seção (opcional)
+});
+
+// Inicializa o modelo Content
+const Content = mongoose.model('Content', contentSchema);
+
 // Middleware para servir arquivos estáticos (imagens)
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
