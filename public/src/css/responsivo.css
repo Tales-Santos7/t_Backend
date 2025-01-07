@@ -1,14 +1,121 @@
-@media (max-width: 450px) {
-    .main-section .content {
-      left: 5%;
-    }
-  
-    .main-section h1 {
-      font-size: 2rem;
-    }
-  
-    .main-section p {
-      font-size: 1rem;
-    }
+@media only screen and (max-width: 1150px) {
+  .main-section .content {
+    left: 5%;
+  }
+
+  .main-section h1 {
+    font-size: 2rem;
+  }
+
+  .main-section p {
+    font-size: 1rem;
+  }
+
+  .container img {
+    display: none;
+  }
+
+  .content {
+    width: 300px;
+    margin-top: -50px;
+  }
+
+  .content h1 {
+    font-size: 60px;
+    width: 400px;
+    text-align: left;
+  }
+
+  .content p {
+    font-size: 20px;
+    text-align: left;
+  }
+
+  .content a {
+    width: 60%;
+  }
+
+  .menu ul li a {
+    display: none;
+  }
+
+  .menu ul a{
+    display: none;
+  }
+
+  .menu {
+    padding-bottom: 30px;
+  }
+
+}
+
+/* Dropdown para telas menores */
+@media only screen and (max-width: 1150px) {
+  .t-drop {
+    display: block;
+    position: absolute; /* Ou fixed se preferir que ele "flutue" sempre visível */
+    top: 20px; /* Ajuste conforme necessário */
+    right: 20px; /* Posiciona na direita */
+  }  
+
+  .dropbtn {
+    font-size: 40px;
+    text-decoration: none;
+    color: #ffffff;
+    cursor: pointer;
+    list-style-type: none;
+    display: inline-block;
+    margin-top: -20px;
   }
   
+  .dropdown-content {
+    display: none; /* Começa escondido */
+    position: absolute;
+    background: #E8F7FC;
+    border-radius: 10px;
+    width: 120px;
+    padding: 20px;
+    height: 150px;
+    margin-top: 10px;
+    border: none;
+    list-style-type: none;
+    margin-left: -150%;
+  }
+
+  .dropdown-content.active {
+    display: block; /* Fica visível ao adicionar a classe */
+    transition: 0.4s;
+  }
+
+  .dropdown-content a {
+    color: black;
+    display: block;
+    text-decoration: none;
+    text-align: left;
+  }
+
+  .dropdown-content a:hover {
+    color: #ff007f;
+  }
+}
+
+/* Dropdown para telas maiores */
+@media only screen and (min-width: 1150px) {
+  .t-drop {
+    display: none;
+  }
+
+  .dropdown-content {
+    display: none; /* Opcional, dependendo do design */
+  }
+}
+
+@media only screen and (min-width: 500px) and (max-width: 1150px) {
+    .content{
+    width: 100%;
+   }
+
+   .content .btn{
+    width: 160px;
+   }
+}

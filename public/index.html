@@ -1,26 +1,43 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Taty - Lifestyle | Beauty |Study</title>
+  <link rel="icon" type="image/png" sizes="16x16" href="./src/img/favicon-16x16.png">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="theme-color" content="#ffffff">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.css">
   <link rel="stylesheet" href="./src/css/style.css">
   <link rel="stylesheet" href="./src/css/responsivo.css">
 </head>
 
 <body>
+
   <div class="container">
     <img src="./src/img/fundo.jpg" alt="">
     <!-- Cabeçalho -->
     <header class="header">
+      <ul class="t-drop">
+        <li class="dropdown" style="list-style: none;">
+          <a id="toggle" class="dropbtn" href="#"><i class="ri-menu-line"></i></a>
+          <div class="dropdown-content">
+            <a href="#" style="color: #fd0990;">Home</a>
+            <a href="#modelos">Galeria</a>
+            <a href="#sobre">Sobre mim</a>
+            <a href="#blog">Blog</a>
+            <a href="#contato">Contato</a>
+          </div>
+        </li>
+      </ul>
       <nav class="menu">
-        <li class="logo-tipo"><a href="#"><span>TATY </span><br> Lifestyle - Beauty - Study</a></li>
+        <a href="#"><li class="logo-tipo"><span>TATY </span><br> Lifestyle - Beauty - Study</li></a>
         <ul>
-          <li><a href="#inicio">Página Inicial</a></li>|
-          <li><a href="#sobre">Sobre mim</a></li>|
-          <li><a href="#modelos">Galeria</a></li>|
-          <li><a href="#blog">Blog</a></li>|
+          <li><a href="#">Página Inicial</a></li>
+          <li><a href="#sobre">Sobre mim</a></li>
+          <li><a href="#modelos">Galeria</a></li>
+          <li><a href="#blog">Blog</a></li>
           <li><a href="#contato">Contato</a></li>
           <a href="https://www.instagram.com/taty_vanin/"><i class="ri-instagram-line"></i></a>
           <a href="https://www.threads.net/@taty_vanin?xmt=AQGzEg0qyOdPiizlW4zHGQ5Bp3YKC91cfnIjRKsrGUzSxXc"><i
@@ -39,7 +56,7 @@
           Sou um parágrafo. Clique aqui para me editar e adicionar seu texto. Sou um ótimo lugar para contar sua
           história e permitir que seus visitantes saibam um pouco mais sobre você.
         </p>
-        <a href="#saiba-mais" class="btn">SAIBA MAIS</a>
+        <a href="#sobre" class="btn">SAIBA MAIS</a>
         <script>
           // Código para carregar conteúdo dinâmico
           fetch('https://portifolio-taty.onrender.com/content/mainSection')
@@ -100,60 +117,53 @@
 
   </section>
   <!-- Seção Blog -->
-  <section id="blog" class="blog">
-    <h2>Blog</h2>
-    <div class="blog-posts">
-      <script>
-        fetch('https://portifolio-taty.onrender.com/blog')
-          .then(response => response.json())
-          .then(posts => {
-            const blogContainer = document.querySelector('.blog-posts');
-            posts.forEach(post => {
-              const postElement = document.createElement('div');
-              postElement.classList.add('post');
-              postElement.innerHTML = `
-              <img src="${post.imageUrl}" alt="${post.title}" class="post-image">
+ <!-- Seção Blog -->
+<section id="blog" class="blog">
+  <h2>Blog</h2>
+  <div class="blog-posts">
+    <script>
+      fetch('https://portifolio-taty.onrender.com/blog')
+        .then(response => response.json())
+        .then(posts => {
+          const blogContainer = document.querySelector('.blog-posts');
+          posts.forEach(post => {
+            // Formata a URL completa da imagem do post
+            const imageUrl = `https://portifolio-taty.onrender.com${post.imageUrl}`;
+            
+            const postElement = document.createElement('div');
+            postElement.classList.add('post');
+            postElement.innerHTML = `
+              <img src="${imageUrl}" alt="${post.title}" class="post-image">
               <h3>${post.title}</h3>
               <p>${post.content}</p>
               <a href="#" class="btn-post">Leia Mais</a>
             `;
-              blogContainer.appendChild(postElement);
-            });
-          })
-          .catch(error => console.error('Erro ao carregar os posts do blog:', error));
-      </script>
-
-
-    </div>
-  </section>
-
+            blogContainer.appendChild(postElement);
+          });
+        })
+        .catch(error => console.error('Erro ao carregar os posts do blog:', error));
+    </script>
+  </div>
+</section>
 
   <footer class="rodape">
-    <div class="container">
+    <div class="container-rodape">
       <div class="linha">
-        <div class="rodape-col-1">
-          <h3>Baixe o nosso app</h3>
-          <p>Baixe nosso aplicativo nas melhores plataformas</p>
-          <div class="app-logo">
-            <img src="./src/img/google.png" alt="Google Play">
-            <img src="./src/img/apple.png" alt="Apple Store">
-          </div>
-        </div>
 
         <div class="rodape-col-2">
-          <a href="#taty">
-            <img src="https://placehold.co/300x89" alt="Logo Ellé Agência de Modelos">
+          <a href="#">
+            <img src="./src/img/logo-180x34.jpg" alt="Logo Taty">
           </a>
-          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
         </div>
 
-        <div class="rodape-col-3">
+        <div id="contato" class="rodape-col-3">
           <h3>Mais informações</h3>
           <ul>
-            <li><a href="#">Cupons</a></li>
-            <li><a href="#">Blog</a></li>
-            <li><a href="#">Política de Privacidade</a></li>
-            <li><a href="#contato">Contatos</a></li>
+            <li><a href="#">Home</a></li>
+            <li><a href="#sobre">Sobre mim</a></li>
+            <li><a href="#modelos">Galeria</a></li>
+            <li><a href="#blog">Blog</a></li>
+            <li><a href="#contato">Contato</a></li>
           </ul>
         </div>
 
@@ -169,10 +179,25 @@
       </div>
     </div>
     <hr>
-    <p class="direitos">&copy; 2025 Ellé - Todos os direitos reservados.</p>
+    <p class="direitos">&copy; 2025 Taty - Todos os direitos reservados.</p>
   </footer>
-
-
+  
+  <script>
+    async function fetchMainColor() {
+      try {
+        const response = await fetch('https://portifolio-taty.onrender.com/settings/color');
+        const data = await response.json();
+        document.documentElement.style.setProperty('--cor-principal', data.mainColor);
+      } catch (error) {
+        console.error('Erro ao carregar a cor principal:', error);
+      }
+    }
+  
+    // Carregar a cor principal quando a página for carregada
+    window.addEventListener('load', fetchMainColor);
+  </script>
+  
+  <script src="./src/js/index.js"></script>
 </body>
 
 </html>

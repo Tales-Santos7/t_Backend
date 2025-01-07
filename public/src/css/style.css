@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Lobster&family=Oswald:wght@200..700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
 :root {
-    --cor-principal: #ff007f;
+    --cor-principal:#ff007f;
 }
 
 * {
@@ -39,7 +39,7 @@ body {
     box-shadow: 0 8px 8px rgba(0, 0, 0, 0.4);
 }
 
-.container {
+.container, .container-rodape {
     flex: 1;
     width: 80%;
     display: flex;
@@ -98,7 +98,7 @@ font-size: 60px;
 }
 
 .main-section .btn:hover {
-    background-color: #e60072;
+    background-color: var(--cor-principal);
 }
 
 /* Cabeçalho */
@@ -266,7 +266,7 @@ font-size: 60px;
 }
 
 .btn-post:hover {
-    background-color: #e60072;
+    background-color: var(--cor-principal);
 }
 
 .post:hover {
@@ -277,8 +277,8 @@ font-size: 60px;
 .rodape {
     background: var(--cor-principal);
     color: white;
-    padding: 10px 10px 10px;
-    font-size: 14px;
+    padding: 10px 5px 10px;
+    font-size: 15px;
 }
 
 .rodape p {
@@ -298,7 +298,6 @@ font-size: 60px;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    background: var(--cor-principal);
 }
 
 .rodape-col-1,
@@ -319,13 +318,15 @@ font-size: 60px;
 }
 
 .rodape-col-2 img {
-    width: 180px;
-    margin-bottom: 10px;
+    width: 500px;
+    z-index: 100;
+    margin-left: -15%;
+    margin-top: 4%;
 }
 
 .rodape-col-3,
 .rodape-col-4 {
-    flex-basis: 20%;
+    flex-basis: 10%;
     text-align: right;
 }
 
@@ -345,17 +346,7 @@ font-size: 60px;
 }
 
 .rodape ul li a:hover {
-    color: #e60072;
-}
-
-.app-logo {
-    display: flex;
-    gap: 10px;
-    margin-top: 10px;
-}
-
-.app-logo img {
-    width: 140px;
+    color: #E8F7FC;
 }
 
 .rodape hr {

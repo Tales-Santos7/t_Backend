@@ -33,15 +33,6 @@ const upload = multer({ storage });
 // Middleware para servir arquivos estáticos (imagens)
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-const contentSchema = new mongoose.Schema({
-  section: String, // Ex.: "gallery"
-  title: String,
-  description: String,
-  images: [String], // URLs das imagens
-});
-
-const Content = mongoose.model('Content', contentSchema);
-
 app.put('/content/gallery', upload.array('images'), async (req, res) => {
   try {
     console.log('Arquivos recebidos:', req.files); // Adiciona log para depurar
@@ -162,6 +153,7 @@ app.post('/blog', upload.single('image'), async (req, res) => {
     res.status(500).json({ message: 'Erro ao criar post' });
   }
 });
+
 
 // API para atualizar um post (incluindo a imagem)
 app.put('/blog/:id', upload.single('image'), async (req, res) => {
