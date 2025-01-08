@@ -46,7 +46,6 @@
   .menu {
     padding-bottom: 30px;
   }
-
 }
 
 /* Dropdown para telas menores */
@@ -96,6 +95,10 @@
 
   .dropdown-content a:hover {
     color: #ff007f;
+  }
+
+  .rodape-col-2 img {
+    width: 400px;
   }
 }
 

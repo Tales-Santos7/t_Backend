@@ -3,6 +3,7 @@ const cors = require('cors');
 const path = require('path'); 
 const mongoose = require('mongoose');
 const multer = require('multer'); // Biblioteca para upload de arquivos
+const fs = require('fs'); // Para manipulação de arquivos no sistema
 const app = express();
 const port = 3000;
 
@@ -15,7 +16,7 @@ mongoose.connect('mongodb+srv://taty:taty1234@cluster0.23kgy.mongodb.net/Portifo
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
-  .then(() => console.log('Conectado ao MongoDB local'))
+  .then(() => console.log('Conectado ao MongoDB'))
   .catch(err => console.error('Erro ao conectar ao MongoDB:', err));
 
 // Configuração do multer para salvar imagens na pasta `uploads`
@@ -28,37 +29,73 @@ const storage = multer.diskStorage({
   },
 });
 
+app.use(express.static(path.join(__dirname, 'public')));
 const upload = multer({ storage });
 
 // Esquema e modelo Content para gerenciar seções
 const contentSchema = new mongoose.Schema({
-  section: { type: String, required: true }, // Nome da seção, ex.: "theme", "gallery"
-  color: String, // Para armazenar a cor (no caso de "theme")
-  images: [String], // URLs de imagens (usado para "gallery")
-  title: String, // Título da seção (opcional)
-  description: String, // Descrição da seção (opcional)
+  section: { type: String, required: true },
+  color: String, 
+  images: [String], 
+  title: String, 
+  description: String,
 });
 
-// Inicializa o modelo Content
 const Content = mongoose.model('Content', contentSchema);
 
 // Middleware para servir arquivos estáticos (imagens)
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-app.put('/content/gallery', upload.array('images'), async (req, res) => {
+app.delete('/content/gallery', async (req, res) => {
   try {
-    console.log('Arquivos recebidos:', req.files); // Adiciona log para depurar
+    const { imageUrl } = req.query; // URL da imagem enviada no parâmetro
+    if (!imageUrl) {
+      return res.status(400).json({ message: 'URL da imagem não fornecida' });
+    }
 
-    const imageUrls = req.files.map(file => `/uploads/${file.filename}`);
-    console.log('URLs das imagens:', imageUrls); // Loga os caminhos gerados
+    // Localiza a galeria correspondente
+    const gallery = await Content.findOne({ section: 'gallery' });
+    if (!gallery) {
+      return res.status(404).json({ message: 'Galeria não encontrada' });
+    }
 
-    const gallery = await Content.findOneAndUpdate(
-      { section: 'gallery' },
-      { $push: { images: { $each: imageUrls } } },
-      { new: true, upsert: true }
-    );
+    // Remove a imagem da lista
+    gallery.images = gallery.images.filter((image) => image !== imageUrl);
 
-    res.json(gallery);
+    // Caminho físico do arquivo
+    const filePath = path.join(__dirname, imageUrl.replace('/uploads/', 'uploads/'));
+
+    // Verifica se o arquivo existe e o remove
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+    }
+
+    // Salva a galeria atualizada
+    await gallery.save();
+
+    res.json({ images: gallery.images }); // Retorna a galeria atualizada
+  } catch (error) {
+    console.error('Erro ao remover imagem:', error);
+    res.status(500).json({ message: 'Erro ao remover imagem' });
+  }
+});
+
+app.put('/content/gallery', upload.array('images', 10), async (req, res) => {
+  try {
+    // Localizar ou criar a galeria
+    let gallery = await Content.findOne({ section: 'gallery' });
+    if (!gallery) {
+      gallery = new Content({ section: 'gallery', images: [] });
+    }
+
+    // Adicionar os caminhos das novas imagens
+    const newImages = req.files.map((file) => `/uploads/${file.filename}`);
+    gallery.images.push(...newImages);
+
+    // Salvar a galeria atualizada
+    await gallery.save();
+
+    res.json({ images: gallery.images });
   } catch (error) {
     console.error('Erro ao adicionar imagens à galeria:', error);
     res.status(500).json({ message: 'Erro ao adicionar imagens à galeria' });
@@ -72,13 +109,12 @@ app.put('/content/:section', async (req, res) => {
 
   try {
     const updatedContent = await Content.findOneAndUpdate(
-      { section }, // Busca pelo nome da seção
-      { title, description }, // Atualiza os campos
-      { new: true, upsert: true } // Cria o documento se não existir
+      { section },
+      { title, description },
+      { new: true, upsert: true }
     );
     res.json(updatedContent);
   } catch (error) {
-    console.error('Erro ao atualizar conteúdo da seção:', error);
     res.status(500).json({ message: 'Erro ao atualizar conteúdo da seção' });
   }
 });
@@ -92,41 +128,9 @@ app.get('/content/:section', async (req, res) => {
     }
     res.json(content);
   } catch (error) {
-    console.error('Erro ao obter conteúdo da seção:', error);
     res.status(500).json({ message: 'Erro ao obter conteúdo da seção' });
   }
 });
-
-// Criar ou atualizar conteúdo de uma seção (ex.: "about")
-app.put('/content/:section', async (req, res) => {
-  const { section } = req.params;
-  const { title, description } = req.body;
-
-  try {
-    const updatedContent = await Content.findOneAndUpdate(
-      { section },
-      { title, description },
-      { new: true, upsert: true } // upsert: cria se não existir
-    );
-    res.json(updatedContent);
-  } catch (error) {
-    res.status(500).json({ message: 'Erro ao atualizar conteúdo da seção' });
-  }
-});
-
-// Obter conteúdo de uma seção
-app.get('/content/:section', async (req, res) => {
-  try {
-    const content = await Content.findOne({ section: req.params.section });
-    if (!content) {
-      return res.status(404).json({ message: 'Seção não encontrada' });
-    }
-    res.json(content);
-  } catch (error) {
-    res.status(500).json({ message: 'Erro ao obter conteúdo' });
-  }
-});
-
 
 // Esquema para posts
 const postSchema = new mongoose.Schema({
@@ -149,13 +153,13 @@ app.get('/blog', async (req, res) => {
 
 // API para criar um post com imagem
 app.post('/blog', upload.single('image'), async (req, res) => {
-  const { title, content } = req.body; // Pegando título e conteúdo do corpo
-  const imageUrl = req.file ? `/uploads/${req.file.filename}` : undefined; // Cria a URL da imagem
+  const { title, content } = req.body;
+  const imageUrl = req.file ? `/uploads/${req.file.filename}` : undefined;
 
   const post = new Post({
     title,
     content,
-    imageUrl, // Salva a URL da imagem no banco
+    imageUrl,
   });
 
   try {
@@ -166,16 +170,15 @@ app.post('/blog', upload.single('image'), async (req, res) => {
   }
 });
 
-
 // API para atualizar um post (incluindo a imagem)
 app.put('/blog/:id', upload.single('image'), async (req, res) => {
-  const { title, content } = req.body; // Pegando título e conteúdo do corpo
-  const imageUrl = req.file ? `/uploads/${req.file.filename}` : undefined; // Cria a URL da imagem
+  const { title, content } = req.body;
+  const imageUrl = req.file ? `/uploads/${req.file.filename}` : undefined;
 
   try {
     const post = await Post.findByIdAndUpdate(
       req.params.id,
-      { title, content, imageUrl }, // Atualiza a URL da imagem se houver
+      { title, content, imageUrl },
       { new: true }
     );
 
@@ -183,12 +186,11 @@ app.put('/blog/:id', upload.single('image'), async (req, res) => {
       return res.status(404).json({ message: 'Post não encontrado' });
     }
 
-    res.json(post); // Retorna o post atualizado com a nova imagem
+    res.json(post);
   } catch (error) {
     res.status(500).json({ message: 'Erro ao editar post' });
   }
 });
-
 
 // API para deletar um post
 app.delete('/blog/:id', async (req, res) => {
@@ -213,5 +215,5 @@ app.get('/', (req, res) => {
 
 // Inicia o servidor
 app.listen(port, () => {
-  console.log(`Servidor backend rodando em https://portifolio-taty.onrender.com:${port}`);
+  console.log(`Servidor backend rodando em http://localhost:${port}`);
 });
