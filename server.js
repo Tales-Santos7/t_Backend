@@ -215,5 +215,5 @@ app.get('/', (req, res) => {
 
 // Inicia o servidor
 app.listen(port, () => {
-  console.log(`Servidor backend rodando em http://localhost:${port}`);
+  console.log(`Servidor backend rodando em https://portifolio-taty.onrender.com/`);
 });
