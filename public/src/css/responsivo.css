@@ -72,13 +72,13 @@
     position: absolute;
     background: #E8F7FC;
     border-radius: 10px;
-    width: 120px;
+    width: 130px;
     padding: 20px;
-    height: 150px;
+    height: 260px;
     margin-top: 10px;
     border: none;
     list-style-type: none;
-    margin-left: -150%;
+    margin-left: -180%;
   }
 
   .dropdown-content.active {
@@ -91,6 +91,7 @@
     display: block;
     text-decoration: none;
     text-align: left;
+    font-size: 25px;
   }
 
   .dropdown-content a:hover {
@@ -98,7 +99,11 @@
   }
 
   .rodape-col-2 img {
-    width: 400px;
+    width: 350px;
+  }
+
+  body {
+    overflow-x: hidden;
   }
 }
 
