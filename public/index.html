@@ -59,7 +59,7 @@
         <a href="#sobre" class="btn">SAIBA MAIS</a>
         <script>
           // Código para carregar conteúdo dinâmico
-          fetch('https://portifolio-taty.onrender.com/content/mainSection')
+          fetch('https://tatyana-vanin.onrender.com/content/mainSection')
             .then(response => {
               if (!response.ok) {
                 throw new Error(`Erro na requisição: ${response.status}`);
@@ -83,7 +83,7 @@
     <h2>✨Galeria</h2>
     <div id="galeria-container">
       <script>
-        fetch('https://portifolio-taty.onrender.com/content/gallery')
+        fetch('https://tatyana-vanin.onrender.com/content/gallery')
           .then((response) => response.json())
           .then((data) => {
             const container = document.getElementById('galeria-container');
@@ -106,7 +106,7 @@
     <p id="about-description">Descrição padrão.</p>
   </section>
   <script>
-    fetch('https://portifolio-taty.onrender.com/content/about')
+    fetch('https://tatyana-vanin.onrender.com/content/about')
       .then((response) => response.json())
       .then((data) => {
         document.querySelector('#about-title').innerText = data.title;
@@ -122,13 +122,13 @@
   <h2>Blog</h2>
   <div class="blog-posts">
     <script>
-      fetch('https://portifolio-taty.onrender.com/blog')
+      fetch('https://tatyana-vanin.onrender.com/blog')
         .then(response => response.json())
         .then(posts => {
           const blogContainer = document.querySelector('.blog-posts');
           posts.forEach(post => {
             // Formata a URL completa da imagem do post
-            const imageUrl = `https://portifolio-taty.onrender.com${post.imageUrl}`;
+            const imageUrl = `https://tatyana-vanin.onrender.com/${post.imageUrl}`;
             
             const postElement = document.createElement('div');
             postElement.classList.add('post');

@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const path = require('path'); 
+const path = require('path');
 const mongoose = require('mongoose');
 const multer = require('multer'); // Biblioteca para upload de arquivos
 const fs = require('fs'); // Para manipulação de arquivos no sistema
@@ -12,7 +12,9 @@ app.use(express.json());
 app.use(cors());
 
 // Conectando ao MongoDB
-mongoose.connect('mongodb+srv://taty:taty1234@cluster0.23kgy.mongodb.net/Portifolio-da-taty?retryWrites=true&w=majority&appName=Cluster0', {
+require('dotenv').config();
+
+mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
@@ -22,7 +24,7 @@ mongoose.connect('mongodb+srv://taty:taty1234@cluster0.23kgy.mongodb.net/Portifo
 // Configuração do multer para salvar imagens na pasta `uploads`
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads/'); // Pasta onde as imagens serão salvas
+    cb(null, '/uploads'); // Pasta onde as imagens serão salvas
   },
   filename: (req, file, cb) => {
     cb(null, Date.now() + path.extname(file.originalname)); // Nome único baseado na data
@@ -35,16 +37,16 @@ const upload = multer({ storage });
 // Esquema e modelo Content para gerenciar seções
 const contentSchema = new mongoose.Schema({
   section: { type: String, required: true },
-  color: String, 
-  images: [String], 
-  title: String, 
+  color: String,
+  images: [String],
+  title: String,
   description: String,
 });
 
 const Content = mongoose.model('Content', contentSchema);
 
 // Middleware para servir arquivos estáticos (imagens)
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads/', express.static(path.join(__dirname, 'uploads')));
 
 app.delete('/content/gallery', async (req, res) => {
   try {
@@ -63,7 +65,7 @@ app.delete('/content/gallery', async (req, res) => {
     gallery.images = gallery.images.filter((image) => image !== imageUrl);
 
     // Caminho físico do arquivo
-    const filePath = path.join(__dirname, imageUrl.replace('/uploads/', 'uploads/'));
+    const filePath = path.join(__dirname, imageUrl.replace('/uploads/', '/uploads/'));
 
     // Verifica se o arquivo existe e o remove
     if (fs.existsSync(filePath)) {
@@ -215,5 +217,10 @@ app.get('/', (req, res) => {
 
 // Inicia o servidor
 app.listen(port, () => {
-  console.log(`Servidor backend rodando em https://portifolio-taty.onrender.com/`);
+  console.log(`Servidor backend rodando em https://tatyana-vanin.onrender.com`);
+});
+
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ message: 'Algo deu errado no servidor', error: err.message });
 });
