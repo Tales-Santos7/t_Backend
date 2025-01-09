@@ -50,6 +50,10 @@
 
 /* Dropdown para telas menores */
 @media only screen and (max-width: 1150px) {
+  body {
+    margin-right: -20px;
+  }
+
   .t-drop {
     display: block;
     position: absolute; /* Ou fixed se preferir que ele "flutue" sempre visível */
