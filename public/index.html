@@ -127,15 +127,19 @@
         .then(posts => {
           const blogContainer = document.querySelector('.blog-posts');
           posts.forEach(post => {
-            // Formata a URL completa da imagem do post
             const imageUrl = `https://tatyana-vanin.onrender.com${post.imageUrl}`;
             
+            // Formata a data de criação (assumindo que a data esteja no formato ISO)
+            const postDate = new Date(post.createdAt);
+            const formattedDate = postDate.getTime() === postDate.getTime() ? postDate.toLocaleDateString('pt-BR') : 'Data inválida';
+    
             const postElement = document.createElement('div');
             postElement.classList.add('post');
             postElement.innerHTML = `
               <img src="${imageUrl}" alt="${post.title}" class="post-image">
               <h3>${post.title}</h3>
               <p>${post.content}</p>
+              <p class="post-date">Publicado em: ${formattedDate}</p>
               <a href="#" class="btn-post">Leia Mais</a>
             `;
             blogContainer.appendChild(postElement);
@@ -143,6 +147,7 @@
         })
         .catch(error => console.error('Erro ao carregar os posts do blog:', error));
     </script>
+    
   </div>
 </section>
 

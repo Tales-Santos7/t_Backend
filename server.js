@@ -139,6 +139,7 @@ const postSchema = new mongoose.Schema({
   title: String,
   content: String,
   imageUrl: String, // Campo para armazenar a URL da imagem
+  createdAt: { type: Date, default: Date.now }, // Forma correta
 });
 
 const Post = mongoose.model('Post', postSchema);
@@ -217,5 +218,5 @@ app.get('/', (req, res) => {
 
 // Inicia o servidor
 app.listen(port, () => {
-  console.log(`Servidor backend rodando em https://tatyana-vanin.onrender.com/`);
+  console.log(`Servidor backend rodando em http://localhost:3000/`);
 });
