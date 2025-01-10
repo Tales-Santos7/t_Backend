@@ -218,5 +218,5 @@ app.get('/', (req, res) => {
 
 // Inicia o servidor
 app.listen(port, () => {
-  console.log(`Servidor backend rodando em http://localhost:3000/`);
+  console.log(`Servidor backend rodando em https://tatyana-vanin.onrender.com/`);
 });
