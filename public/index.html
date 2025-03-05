@@ -4,44 +4,65 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Taty - Lifestyle | Beauty | Study</title>
+
   <link rel="icon" type="image/png" sizes="16x16" href="./src/img/favicon-16x16.png">
+
   <meta name="msapplication-TileColor" content="#ffffff">
   <meta name="theme-color" content="#ffffff">
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  
+  <script src="https://kit.fontawesome.com/959c1b1c33.js" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="./src/css/style.css">
   <link rel="stylesheet" href="./src/css/responsivo.css">
 </head>
-
 <body>
+  <ul class="none">
+    <li class="dropdown">
+      </a>
+      <a id="toggle" class="dropbtn"><i class="ri-menu-line"></i></a>
+      <div class="dropdown-content">
+        <img src="./src/img/Cópia-de-Taty.png" alt="Logo Tales" style="background-color: #0d0d17;">
 
-  <div class="container">
-    <img src="./src/img/fundo.jpg" alt="">
-    <!-- Cabeçalho -->
-    <header class="header">
-      <ul class="t-drop">
-        <li class="dropdown" style="list-style: none;">
-          <a id="toggle" class="dropbtn" href="#"><i class="ri-menu-line"></i></a>
-          <div class="dropdown-content">
-            <a href="https://tatyana-vanin.onrender.com/" style="color: #fd0990;">Home</a>
-            <a href="#modelos">Galeria</a>
-            <a href="#sobre">Sobre mim</a>
-            <a href="#blog">Blog</a>
-            <a href="#contato">Contato</a>
-          </div>
-        </li>
-      </ul>
+        <a href="./index.html"
+          style=" background-color: #F4ECDF; color: #0d0d17;">Home</a>
+        <i class="icone-dropdown icone-dropdown-2 ri-user-3-fill"></i> <a href="#sobre">Sobre mim</a>
+        <i class="icone-dropdown icone-dropdown-3 ri-multi-image-fill"></i><a href="#galeria">
+          Galeria</a>
+        <i class="icone-dropdown icone-dropdown-3 ri-news-fill"></i><a href="#blog">
+          Blog</a>
+        <i class="icone-dropdown icone-dropdown-2 ri-phone-fill"></i><a href="#contato"> Contato</a>
+        <div class="fim-drop">
+          <a class="fim-drop fim-drop-1" href="https://www.instagram.com/taty_vanin/" target="_blank"><i class="ri-instagram-fill"></i>
+          </a>
+          <a class="fim-drop fim-drop-2" href="https://www.threads.net/@taty_vanin?xmt=AQGzEg0qyOdPiizlW4zHGQ5Bp3YKC91cfnIjRKsrGUzSxXc" target="_blank"><i
+              class="ri-threads-line"></i></a>
+        </div><br><br>
+        <!-- <span style="color: #F4ECDF;margin-left: 70px; font-size: 12px;margin-top: -30px;">
+          <br>Quem sonha, conquista🌟
+        </span> -->
+      </div>
+    </li>
+  </ul>
+
+    <div class="container">
+      <img src="./src/img/fundo.jpg" alt="">
+      <!-- Cabeçalho -->
+      <header class="header">
       <nav class="menu">
         <a href="https://tatyana-vanin.onrender.com/"><li class="logo-tipo"><span>TATY </span><br> Lifestyle - Beauty - Study</li></a>
         <ul>
-          <li><a href="https://tatyana-vanin.onrender.com/">Página Inicial</a></li>
-          <li><a href="#sobre">Sobre mim</a></li>
-          <li><a href="#modelos">Galeria</a></li>
-          <li><a href="#blog">Blog</a></li>
-          <li><a href="#contato">Contato</a></li>
-          <a href="https://www.instagram.com/taty_vanin/"><i class="ri-instagram-line"></i></a>
-          <a href="https://www.threads.net/@taty_vanin?xmt=AQGzEg0qyOdPiizlW4zHGQ5Bp3YKC91cfnIjRKsrGUzSxXc"><i
-              class="ri-threads-line"></i></a>
+          <li><a class="size-nav" href="https://tatyana-vanin.onrender.com/">Home</a></li>
+          <li><a class="size-nav" href="#sobre">Sobre</a></li>
+          <li><a class="size-nav" href="#modelos">Galeria</a></li>
+          <li><a class="size-nav" href="#blog">Blog</a></li>
+          <li><a class="size-nav" href="#contato">Contato</a></li>
+          <a href="https://www.instagram.com/taty_vanin/" target="_blank"><i class="ri-instagram-line social"></i></a>
+          <a href="https://www.threads.net/@taty_vanin?xmt=AQGzEg0qyOdPiizlW4zHGQ5Bp3YKC91cfnIjRKsrGUzSxXc" target="_blank"><i
+              class="ri-threads-line social"></i></a>
         </ul>
       </nav>
     </header>
@@ -80,7 +101,7 @@
 
   <!-- Seção Galeria -->
   <section id="modelos" class="galeria">
-    <h2>✨Galeria</h2>
+    <h2 id="galeria">✨Galeria</h2>
     <div id="galeria-container">
       <script>
         fetch('https://tatyana-vanin.onrender.com/content/gallery')
