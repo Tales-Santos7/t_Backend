@@ -185,7 +185,7 @@ body {
 
 /* Estilo da seção Sobre Mim */
 .sobre {
-  padding: 50px 20px;
+  padding: 50px 50px;
   text-align: center;
   background-color: #f9f9f9;
   color: #333;
@@ -378,3 +378,4 @@ body {
     display: none;
   }
 }
+
