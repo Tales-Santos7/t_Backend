@@ -232,6 +232,46 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
+const socialSchema = new mongoose.Schema({
+  name: String,
+  url: String,
+});
+
+const SocialLink = mongoose.model("SocialLink", socialSchema);
+
+// Obter todos os links das redes sociais
+app.get("/social-links", async (req, res) => {
+  try {
+    const links = await SocialLink.find();
+    res.json(links);
+  } catch (error) {
+    res.status(500).json({ message: "Erro ao obter links das redes sociais" });
+  }
+});
+
+// Atualizar um link específico
+app.put("/social-links/:id", async (req, res) => {
+  try {
+    const { url } = req.body;
+    const link = await SocialLink.findByIdAndUpdate(req.params.id, { url }, { new: true });
+    res.json(link);
+  } catch (error) {
+    res.status(500).json({ message: "Erro ao atualizar link da rede social" });
+  }
+});
+
+// Adicionar um novo link de rede social
+app.post("/social-links", async (req, res) => {
+  try {
+    const { name, url } = req.body;
+    const newLink = new SocialLink({ name, url });
+    await newLink.save();
+    res.status(201).json(newLink);
+  } catch (error) {
+    res.status(500).json({ message: "Erro ao adicionar link de rede social" });
+  }
+});
+
 // Inicia o servidor
 app.listen(port, () => {
   console.log(
