@@ -212,12 +212,6 @@ body {
   color: #333;
 }
 
-@media (max-width: 643px) {
-  .blog {
-    margin-right: 5%;
-  }
-}
-
 .blog h2 {
   font-size: 36px;
   margin-bottom: 30px;
