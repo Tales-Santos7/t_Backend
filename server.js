@@ -242,9 +242,8 @@ app.post("/social-links", async (req, res) => {
   }
 });
 
-// Rota principal
-app.get("/index.html", (req, res) => {
-  res.send("Servidor está ativo.");
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
 app.listen(port, () => {
