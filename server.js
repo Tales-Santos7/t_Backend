@@ -242,6 +242,11 @@ app.post("/social-links", async (req, res) => {
   }
 });
 
+// Rota principal
+app.get("/index.html", (req, res) => {
+  res.send("Servidor está ativo.");
+});
+
 app.listen(port, () => {
   console.log(
     `Servidor backend rodando em https://tatyana-vanin.onrender.com/`
