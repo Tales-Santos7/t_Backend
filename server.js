@@ -1,18 +1,18 @@
+// Backend completo com upload para imgbb
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
 const mongoose = require("mongoose");
-const multer = require("multer"); // Biblioteca para upload de arquivos
-const fs = require("fs"); // Para manipulação de arquivos no sistema
+const multer = require("multer");
+const fs = require("fs");
+const axios = require("axios");
+const FormData = require("form-data");
 const app = express();
 const port = 3000;
+require("dotenv").config();
 
-// Middleware para processar JSON no corpo das requisições
 app.use(express.json());
 app.use(cors());
-
-// Conectando ao MongoDB
-require("dotenv").config();
 
 mongoose
   .connect(process.env.MONGO_URI, {
@@ -22,25 +22,9 @@ mongoose
   .then(() => console.log("Conectado ao MongoDB"))
   .catch((err) => console.error("Erro ao conectar ao MongoDB:", err));
 
-const uploadDir = path.join(__dirname, "uploads");
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
+const upload = multer({ dest: "temp/" });
 
-// Configuração do multer para salvar imagens na pasta `uploads`
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads/"); // Pasta onde as imagens serão salvas
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname)); // Nome único baseado na data
-  },
-});
-
-app.use(express.static(path.join(__dirname, "public")));
-const upload = multer({ storage });
-
-// Esquema e modelo Content para gerenciar seções
+// Esquema Content
 const contentSchema = new mongoose.Schema({
   section: { type: String, required: true },
   color: String,
@@ -48,43 +32,21 @@ const contentSchema = new mongoose.Schema({
   title: String,
   description: String,
 });
-
 const Content = mongoose.model("Content", contentSchema);
 
-// Middleware para servir arquivos estáticos (imagens)
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-
+// GALERIA
 app.delete("/content/gallery", async (req, res) => {
   try {
-    const { imageUrl } = req.query; // URL da imagem enviada no parâmetro
-    if (!imageUrl) {
-      return res.status(400).json({ message: "URL da imagem não fornecida" });
-    }
+    const { imageUrl } = req.query;
+    if (!imageUrl) return res.status(400).json({ message: "URL da imagem não fornecida" });
 
-    // Localiza a galeria correspondente
     const gallery = await Content.findOne({ section: "gallery" });
-    if (!gallery) {
-      return res.status(404).json({ message: "Galeria não encontrada" });
-    }
+    if (!gallery) return res.status(404).json({ message: "Galeria não encontrada" });
 
-    // Remove a imagem da lista
     gallery.images = gallery.images.filter((image) => image !== imageUrl);
-
-    // Caminho físico do arquivo
-    const filePath = path.join(
-      __dirname,
-      imageUrl.replace("/uploads/", "uploads/")
-    );
-
-    // Verifica se o arquivo existe e o remove
-    if (fs.existsSync(filePath)) {
-      fs.unlinkSync(filePath);
-    }
-
-    // Salva a galeria atualizada
     await gallery.save();
 
-    res.json({ images: gallery.images }); // Retorna a galeria atualizada
+    res.json({ images: gallery.images });
   } catch (error) {
     console.error("Erro ao remover imagem:", error);
     res.status(500).json({ message: "Erro ao remover imagem" });
@@ -93,17 +55,30 @@ app.delete("/content/gallery", async (req, res) => {
 
 app.put("/content/gallery", upload.array("images", 10), async (req, res) => {
   try {
-    // Localizar ou criar a galeria
     let gallery = await Content.findOne({ section: "gallery" });
     if (!gallery) {
       gallery = new Content({ section: "gallery", images: [] });
     }
 
-    // Adicionar os caminhos das novas imagens
-    const newImages = req.files.map((file) => `/uploads/${file.filename}`);
-    gallery.images.push(...newImages);
+    const uploadedUrls = [];
 
-    // Salvar a galeria atualizada
+    for (const file of req.files) {
+      const formData = new FormData();
+      formData.append("image", fs.createReadStream(file.path));
+
+      const response = await axios.post(
+        `https://api.imgbb.com/1/upload?key=${process.env.POSTIMAGES_API_KEY}`,
+        formData,
+        { headers: formData.getHeaders() }
+      );
+
+      const imageUrl = response.data.data.url;
+      uploadedUrls.push(imageUrl);
+
+      fs.unlinkSync(file.path); // apagar ficheiro local
+    }
+
+    gallery.images.push(...uploadedUrls);
     await gallery.save();
 
     res.json({ images: gallery.images });
@@ -142,17 +117,15 @@ app.get("/content/:section", async (req, res) => {
   }
 });
 
-// Esquema para posts
+// BLOG
 const postSchema = new mongoose.Schema({
   title: String,
   content: String,
-  imageUrl: String, // Campo para armazenar a URL da imagem
-  createdAt: { type: Date, default: Date.now }, // Forma correta
+  imageUrl: String,
+  createdAt: { type: Date, default: Date.now },
 });
-
 const Post = mongoose.model("Post", postSchema);
 
-// API para obter os posts
 app.get("/blog", async (req, res) => {
   try {
     const posts = await Post.find();
@@ -162,84 +135,83 @@ app.get("/blog", async (req, res) => {
   }
 });
 
-// API para criar um post com imagem
 app.post("/blog", upload.single("image"), async (req, res) => {
-  const { title, content } = req.body;
-  const imageUrl = req.file ? `/uploads/${req.file.filename}` : undefined;
-
-  const post = new Post({
-    title,
-    content,
-    imageUrl,
-  });
-
   try {
+    let imageUrl = "";
+    if (req.file) {
+      const formData = new FormData();
+      formData.append("image", fs.createReadStream(req.file.path));
+
+      const response = await axios.post(
+        `https://api.imgbb.com/1/upload?key=${process.env.POSTIMAGES_API_KEY}`,
+        formData,
+        { headers: formData.getHeaders() }
+      );
+
+      imageUrl = response.data.data.url;
+      fs.unlinkSync(req.file.path);
+    }
+
+    const post = new Post({
+      title: req.body.title,
+      content: req.body.content,
+      imageUrl,
+    });
     await post.save();
     res.status(201).json(post);
   } catch (error) {
+    console.error("Erro ao criar post:", error);
     res.status(500).json({ message: "Erro ao criar post" });
   }
 });
 
-// API para atualizar um post (incluindo a imagem)
 app.put("/blog/:id", upload.single("image"), async (req, res) => {
-  console.log("Editando post:", req.params.id);
-  console.log("Arquivo recebido:", req.file);
-
-  const { title, content } = req.body;
-
   try {
     const post = await Post.findById(req.params.id);
-    if (!post) {
-      return res.status(404).json({ message: "Post não encontrado" });
+    if (!post) return res.status(404).json({ message: "Post não encontrado" });
+
+    let imageUrl = post.imageUrl;
+    if (req.file) {
+      const formData = new FormData();
+      formData.append("image", fs.createReadStream(req.file.path));
+
+      const response = await axios.post(
+        `https://api.imgbb.com/1/upload?key=${process.env.POSTIMAGES_API_KEY}`,
+        formData,
+        { headers: formData.getHeaders() }
+      );
+      imageUrl = response.data.data.url;
+      fs.unlinkSync(req.file.path);
     }
 
-    // Mantém a imagem antiga se nenhuma nova for enviada
-    const imageUrl = req.file ? `/uploads/${req.file.filename}` : post.imageUrl;
-
-    const updatedPost = await Post.findByIdAndUpdate(
-      req.params.id,
-      { title, content, imageUrl },
-      { new: true }
-    );
-
-    res.json(updatedPost);
+    post.title = req.body.title;
+    post.content = req.body.content;
+    post.imageUrl = imageUrl;
+    await post.save();
+    res.json(post);
   } catch (error) {
     console.error("Erro ao atualizar post:", error);
     res.status(500).json({ message: "Erro ao atualizar post" });
   }
 });
 
-// API para deletar um post
 app.delete("/blog/:id", async (req, res) => {
   try {
     const post = await Post.findByIdAndDelete(req.params.id);
-    if (!post) {
-      return res.status(404).json({ message: "Post não encontrado" });
-    }
+    if (!post) return res.status(404).json({ message: "Post não encontrado" });
     res.json({ message: "Post excluído com sucesso" });
   } catch (error) {
     res.status(500).json({ message: "Erro ao excluir post" });
   }
 });
 
-// Serve arquivos estáticos como CSS, imagens e JS
-app.use(express.static(path.join(__dirname, "public")));
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-
-// Rota para a página inicial
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
-});
-
+// Redes Sociais
 const socialSchema = new mongoose.Schema({
   name: String,
   url: String,
 });
-
 const SocialLink = mongoose.model("SocialLink", socialSchema);
 
-// Obter todos os links das redes sociais
 app.get("/social-links", async (req, res) => {
   try {
     const links = await SocialLink.find();
@@ -249,7 +221,6 @@ app.get("/social-links", async (req, res) => {
   }
 });
 
-// Atualizar um link específico
 app.put("/social-links/:id", async (req, res) => {
   try {
     const { url } = req.body;
@@ -260,7 +231,6 @@ app.put("/social-links/:id", async (req, res) => {
   }
 });
 
-// Adicionar um novo link de rede social
 app.post("/social-links", async (req, res) => {
   try {
     const { name, url } = req.body;
@@ -272,7 +242,11 @@ app.post("/social-links", async (req, res) => {
   }
 });
 
-// Inicia o servidor
+// Rota principal
+app.get("/", (req, res) => {
+  res.send("Servidor está ativo.");
+});
+
 app.listen(port, () => {
   console.log(
     `Servidor backend rodando em https://tatyana-vanin.onrender.com/`
