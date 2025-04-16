@@ -270,6 +270,24 @@ body {
   background-color: var(--cor-principal);
 }
 
+.btn-post-more {
+  background: linear-gradient(135deg, #ff007f, #8e2de2);
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 25px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: opacity 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-post-more:hover {
+  opacity: 0.9;
+  transform: scale(1.02);
+  border: 1px solid #fff;
+}
+
 .post:hover {
   transform: translateY(-5px);
 }

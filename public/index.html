@@ -145,35 +145,76 @@
   <!-- Seção Blog -->
   <section id="blog" class="blog">
     <h2>Blog</h2>
-    <div class="blog-posts">
-      <script>
-        fetch('https://tatyana-vanin.onrender.com/blog')
-          .then(response => response.json())
-          .then(posts => {
-            const blogContainer = document.querySelector('.blog-posts');
-            posts.forEach(post => {
-              const imageUrl = `https://tatyana-vanin.onrender.com${post.imageUrl}`;
+   <!-- Posts -->
+   <div class="blog-posts" id="blog-posts-container"></div>
 
-              // Formata a data de criação (assumindo que a data esteja no formato ISO)
-              const postDate = new Date(post.createdAt);
-              const formattedDate = postDate.getTime() === postDate.getTime() ? postDate.toLocaleDateString('pt-BR') : 'Data inválida';
-
-              const postElement = document.createElement('div');
-              postElement.classList.add('post');
-              postElement.innerHTML = `
-              <img src="${imageUrl}" alt="${post.title}" class="post-image">
-              <h3>${post.title}</h3>
-              <p>${post.content}</p>
-              <p class="post-date">Publicado em: ${formattedDate}</p>
-              <a href="#" class="btn-post">Leia Mais</a>
-            `;
-              blogContainer.appendChild(postElement);
-            });
-          })
-          .catch(error => console.error('Erro ao carregar os posts do blog:', error));
-      </script>
-
-    </div>
+   <div class="controles-posts" style="margin-top: 1rem; text-align: center;">
+     <button id="load-more" class="btn-post-more" style="display: none;">Mostrar mais</button>
+     <button id="show-less" class="btn-post-more" style="display: none; margin-left: 10px;">Mostrar menos</button>
+   </div>
+   
+   <script>
+     const postsPerPage = 8; // Número de posts por página
+     let currentPage = 1;
+     let allPosts = [];
+   
+     function renderPosts() {
+       const container = document.getElementById('blog-posts-container');
+       container.innerHTML = '';
+       const endIndex = postsPerPage * currentPage;
+       const visiblePosts = allPosts.slice(0, endIndex);
+   
+       visiblePosts.forEach(post => {
+         const imageUrl = `https://tatyana-vanin.onrender.com${post.imageUrl}`;
+         const postDate = new Date(post.createdAt);
+         const formattedDate = isNaN(postDate) ? 'Data inválida' : postDate.toLocaleDateString('pt-BR');
+         const postElement = document.createElement('div');
+         postElement.classList.add('post');
+         postElement.innerHTML = `
+           <img src="${imageUrl}" alt="${post.title}" class="post-image">
+           <h3>${post.title}</h3>
+           <p>${post.content}</p>
+           <p class="post-date">Publicado em: ${formattedDate}</p>
+           <a href="#" class="btn-post">Leia Mais</a>
+         `;
+         container.appendChild(postElement);
+       });
+   
+       const btnLoadMore = document.getElementById('load-more');
+       const btnShowLess = document.getElementById('show-less');
+   
+       if (visiblePosts.length < allPosts.length) {
+         btnLoadMore.style.display = 'inline-block';
+         btnShowLess.style.display = 'none';
+       } else if (currentPage > 1) {
+         btnLoadMore.style.display = 'none';
+         btnShowLess.style.display = 'inline-block';
+       } else {
+         btnLoadMore.style.display = 'none';
+         btnShowLess.style.display = 'none';
+       }
+     }
+   
+     fetch('https://tatyana-vanin.onrender.com/blog')
+       .then(response => response.json())
+       .then(posts => {
+         allPosts = posts;
+         renderPosts();
+       })
+       .catch(error => console.error('Erro ao carregar os posts do blog:', error));
+   
+     document.getElementById('load-more').addEventListener('click', () => {
+       currentPage++;
+       renderPosts();
+     });
+   
+     document.getElementById('show-less').addEventListener('click', () => {
+       currentPage = 1;
+       renderPosts();
+       window.scrollTo({ top: document.getElementById('blog-posts-container').offsetTop, behavior: 'smooth' });
+     });
+   </script>
+   
   </section>
 
   <footer class="rodape">
