@@ -132,9 +132,31 @@ body {
   font-weight: bold;
 }
 
-.header .menu ul li a:hover {
-  border-top: 4px solid #150050 !important;
-  transition: 0.1s;
+.header .menu ul li a {
+  position: relative;
+  color: white;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 5px 0;
+  transition: color 0.3s;
+}
+
+.header .menu ul li a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 4px;
+  width: 45%;
+  height: 3px;
+  background-color: #150050;  /*#96004b */
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease-in-out;
+}
+
+.header .menu ul li a:hover::after {
+  transform: scaleX(1);
 }
 
 .menu ul {
@@ -348,6 +370,31 @@ body {
   text-align: right;
 }
 
+/* .rodape ul li a {
+  position: relative;
+  color: white;
+  text-decoration: none;
+  font-weight: 400;
+  transition: color 0.3s ease;
+}
+
+.rodape ul li a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 2px;
+  background-color: #150050;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease-in-out;
+}
+
+.rodape ul li a:hover::after {
+  transform: scaleX(1);
+} */
+
 .rodape ul {
   list-style: none;
   padding: 0;
@@ -365,6 +412,9 @@ body {
 
 .rodape ul li a:hover {
   color: #e8f7fc;
+  background-color: rgba(0, 0, 0, 0.411);
+  border-radius: 5px;
+  padding: 5px;
 }
 
 .rodape hr {
