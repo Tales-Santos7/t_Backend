@@ -407,11 +407,11 @@ body {
 .rodape ul li a {
   text-decoration: none;
   color: white;
-  transition: color 0.3s;
 }
 
 .rodape ul li a:hover {
   color: #e8f7fc;
+  transition: 0.2s;
   background-color: rgba(0, 0, 0, 0.411);
   border-radius: 5px;
   padding: 5px;
