@@ -6,11 +6,13 @@ O projeto oferece uma interface intuitiva, com seções totalmente personalizave
 
 ### Captura do projeto
 
-[<img src="./public/taty.gif" alt="gif da dela inicial do projeto 'Tatyana Vanin'">]
+<img src="./public/taty.gif" alt="gif da dela inicial do projeto 'Tatyana Vanin'">
 
 ### Links
 
 - URL do site ativo: [🛜Projeto ativo aqui💻](https://tatyana-vanin.vercel.app/)
+- [Parte visual (Front-end Vercel)](https://github.com/Tales-Santos7/t_b-vercel).
+- [Painel de Controle](https://github.com/Tales-Santos7/t_f).
 
 ## Sobre esse Projeto 
 
@@ -27,11 +29,6 @@ O projeto oferece uma interface intuitiva, com seções totalmente personalizave
    - NodeJs <img align="center" alt="NodeJs" height="30" width="40" src="https://raw.githubusercontent.com/devicons/devicon/master/icons/nodejs/nodejs-original.svg"><br><br>
    - MongoDB <img align="center" alt="MongoDB" height="30" width="40" src="https://raw.githubusercontent.com/devicons/devicon/master/icons/mongodb/mongodb-original.svg"><br>
 </div>
-
-### Outras Partes do Projeto
-
-[Parte visual (Front-end Vercel)](https://github.com/Tales-Santos7/t_b-vercel).<br>
-[Painel de Controle](https://github.com/Tales-Santos7/t_f).<br>
 
 ## Outros
 
