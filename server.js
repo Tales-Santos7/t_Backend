@@ -258,6 +258,16 @@ app.put("/blog/:id", upload.single("image"), async (req, res) => {
   }
 });
 
+app.get("/blog/:id", async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+    if (!post) return res.status(404).json({ message: "Post não encontrado" });
+    res.json(post);
+  } catch (error) {
+    res.status(500).json({ message: "Erro ao buscar o post" });
+  }
+});
+
 app.delete("/blog/:id", async (req, res) => {
   try {
     const post = await Post.findByIdAndDelete(req.params.id);
@@ -305,11 +315,10 @@ app.post("/social-links", async (req, res) => {
   }
 });
 
-// Serve arquivos estáticos como CSS, imagens e JS
-app.use(express.static(path.join(__dirname, "public")));
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+// Serve os ficheiros estáticos da aplicação React
+app.use(express.static(path.join(__dirname, "public"))); // ou "build" se estiveres a usar `npm run build`
 
-// Rota para a página inicial
+// Redireciona todas as rotas desconhecidas para o index.html (SPA)
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
