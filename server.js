@@ -258,16 +258,6 @@ app.put("/blog/:id", upload.single("image"), async (req, res) => {
   }
 });
 
-app.get("/blog/:id", async (req, res) => {
-  try {
-    const post = await Post.findById(req.params.id);
-    if (!post) return res.status(404).json({ message: "Post não encontrado" });
-    res.json(post);
-  } catch (error) {
-    res.status(500).json({ message: "Erro ao buscar o post" });
-  }
-});
-
 app.delete("/blog/:id", async (req, res) => {
   try {
     const post = await Post.findByIdAndDelete(req.params.id);
@@ -312,6 +302,16 @@ app.post("/social-links", async (req, res) => {
     res.status(201).json(newLink);
   } catch (error) {
     res.status(500).json({ message: "Erro ao adicionar link de rede social" });
+  }
+});
+
+app.delete("/social-links/:id", async (req, res) => {
+  try {
+    const deleted = await SocialLink.findByIdAndDelete(req.params.id);
+    if (!deleted) return res.status(404).json({ message: "Link não encontrado" });
+    res.json({ message: "Link excluído com sucesso" });
+  } catch (error) {
+    res.status(500).json({ message: "Erro ao excluir link" });
   }
 });
 
